@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gautam Kumar | Flutter Developer</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <!-- Logo -->
+            <div class="logo">
+                <span class="logo-text">Gautam</span>
+                <span class="logo-dot">.</span>
+                <span class="logo-text">Kumar</span>
+            </div>
+            
+            <!-- Mobile menu button -->
+            <button class="mobile-menu-btn">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <!-- Navigation -->
+            <nav class="nav">
+                <ul>
+                    <li><a href="#intro" class="nav-link">About</a></li>
+                    <li><a href="#experience" class="nav-link">Experience</a></li>
+                    <li><a href="#projects" class="nav-link">Projects</a></li>
+                    <li><a href="#skills" class="nav-link">Skills</a></li>
+                    <li><a href="#background" class="nav-link">Background</a></li>
+                    <li><a href="#contact" class="nav-link">Contact</a></li>
+                </ul>
+            </nav>
+            
+            <!-- Theme switcher -->
+            <div class="controls">
+                <button class="theme-btn" id="theme-toggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+    
+    <main>
+        <!-- Intro Section -->
+        <section id="intro" class="intro-section">
+            <div class="container">
+                <div class="intro-content">
+                    <div class="intro-profile">
+                        <div class="profile-image">
+                            <img src="profile.jpg" alt="Gautam Kumar profile">
+                        </div>
+                    </div>
+                    <div class="intro-text">
+                        <div class="intro-title">
+                            <h1>Hello, I'm <span class="highlight">Gautam Kumar</span></h1>
+                            <h2 class="gradient-text">Mobile App Developer | Problem Solver</h2>
+                        </div>
+                        <p class="intro-description">
+                            A Flutter Developer with experience in building complex mobile applications, strong problem-solving skills, and a passion for creating efficient, user-friendly solutions.
+                        </p>
+                        <div class="intro-links">
+                            <a href="#contact" class="contact-link">
+                                <i class="fas fa-paper-plane"></i>
+                                <span>Get in touch</span>
+                            </a>
+                            <a href="https://github.com/kumar-gautam24" class="github-link" target="_blank">
+                                <i class="fab fa-github"></i>
+                                <span>GitHub</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Experience Section -->
+        <section id="experience" class="experience-section">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-subtitle">EXPERIENCE</span>
+                    <h2 class="section-title">Work Experience</h2>
+                </div>
+                <div class="timeline" id="experience-timeline">
+                    <!-- Experience items will be loaded from data.js -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Projects Section -->
+        <section id="projects" class="projects-section">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-subtitle">PROJECTS</span>
+                    <h2 class="section-title">Technical Projects</h2>
+                </div>
+                <div class="projects-grid" id="projects-grid">
+                    <!-- Project cards will be loaded from data.js -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Skills Section -->
+        <section id="skills" class="skills-section">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-subtitle">SKILLS</span>
+                    <h2 class="section-title">Technical Skills</h2>
+                </div>
+                <div class="skills-container" id="skills-container">
+                    <!-- Skill categories will be loaded from data.js -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Background Section -->
+        <section id="background" class="background-section">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-subtitle">BACKGROUND</span>
+                    <h2 class="section-title">Education & Achievements</h2>
+                </div>
+                <div class="background-grid" id="background-grid">
+                    <!-- Background cards will be loaded from data.js -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="contact-section">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-subtitle">CONTACT</span>
+                    <h2 class="section-title">Get In Touch</h2>
+                </div>
+                <div class="contact-content">
+                    <p class="contact-description">Feel free to reach out for opportunities or collaborations!</p>
+                    
+                    <div class="contact-links">
+                        <a href="mailto:gk24feb@gmail.com" class="contact-method" id="email-contact">
+                            <i class="fas fa-envelope"></i>
+                            <div class="contact-method-content">
+                                <span class="contact-method-label">Email</span>
+                                <span class="contact-method-value">gk24feb@gmail.com</span>
+                            </div>
+                        </a>
+                        
+                        <a href="tel:+917542036307" class="contact-method" id="phone-contact">
+                            <i class="fas fa-phone-alt"></i>
+                            <div class="contact-method-content">
+                                <span class="contact-method-label">Phone</span>
+                                <span class="contact-method-value">+91 7542036307</span>
+                            </div>
+                        </a>
+                        
+                        <a href="https://linkedin.com/in/gautam-kumar-24feb" class="contact-method" target="_blank">
+                            <i class="fab fa-linkedin-in"></i>
+                            <div class="contact-method-content">
+                                <span class="contact-method-label">LinkedIn</span>
+                                <span class="contact-method-value">gautam-kumar-24feb</span>
+                            </div>
+                        </a>
+                        
+                        <a href="https://github.com/kumar-gautam24" class="contact-method" target="_blank">
+                            <i class="fab fa-github"></i>
+                            <div class="contact-method-content">
+                                <span class="contact-method-label">GitHub</span>
+                                <span class="contact-method-value">kumar-gautam24</span>
+                            </div>
+                        </a>
+                    </div>
+                    
+                    <div class="contact-alternative">
+                        <p class="contact-note">Prefer to connect quickly? Click on the <strong>email</strong> or <strong>phone</strong> to copy directly to your clipboard.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>© <span id="current-year"></span> Gautam Kumar. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Project Modal -->
+    <div class="modal" id="project-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modal-title">Project Details</h3>
+                <button class="modal-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="project-content" id="modal-content"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Include marked.js for markdown parsing -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    
+    <!-- Include your data and main script -->
+    <script src="data.js"></script>
+    <script src="main.js"></script>
+</body>
+</html>
