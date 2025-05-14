@@ -32,10 +32,16 @@ document.addEventListener('DOMContentLoaded', function() {
         setupSmoothScrolling();
         setupModals();
         setupThemeToggle();
-        // setupClipboardCopy();
+        setupCopyButtons();
+        setupScrollSpy();
         
         // Set current year in footer
         document.getElementById('current-year').textContent = new Date().getFullYear();
+        setTimeout(() => {
+            setupScrollAnimations();
+            setupCardActiveStates();
+            setupBackgroundAnimation();
+        }, 100);
         
         console.log('Portfolio initialization complete');
     } catch (error) {
@@ -74,8 +80,10 @@ function initPortfolio() {
         // Load Background section
         loadBackground();
         
-        // Load Contact section
-        loadContact();
+        // We're not dynamically loading the contact section anymore
+        // It's directly in the HTML for better styling control
+        
+        console.log('All sections loaded');
     } catch (error) {
         console.error('Error in initPortfolio:', error);
         throw new Error('Failed to initialize portfolio: ' + error.message);
@@ -336,27 +344,15 @@ function loadBackground() {
     }
 }
 
-// Load Contact section
-function loadContact() {
+// Setup copy buttons functionality
+function setupCopyButtons() {
     try {
-        // Note: The contact section is now directly in the HTML with a better design
-        // This function can be used if you want to dynamically load contact info from the data
-        console.log('Contact section is using the direct HTML approach');
-    } catch (error) {
-        console.error('Error loading contact section:', error);
-    }
-}
-
-// Setup clipboard copy functionality
-function setupClipboardCopy() {
-    try {
-        // Setup email copy
+        // Setup email contact copying
         const emailContact = document.getElementById('email-contact');
         if (emailContact) {
             emailContact.addEventListener('click', function(e) {
                 e.preventDefault();
-                const email = portfolioData.basics.email || 'gk24feb@gmail.com';
-                navigator.clipboard.writeText(email)
+                navigator.clipboard.writeText('gk24feb@gmail.com')
                     .then(() => {
                         showNotification('Email copied to clipboard!');
                     })
@@ -366,13 +362,12 @@ function setupClipboardCopy() {
             });
         }
         
-        // Setup phone copy
+        // Setup phone contact copying
         const phoneContact = document.getElementById('phone-contact');
         if (phoneContact) {
             phoneContact.addEventListener('click', function(e) {
                 e.preventDefault();
-                const phone = portfolioData.basics.phone || '+91 7542036307';
-                navigator.clipboard.writeText(phone)
+                navigator.clipboard.writeText('+91 7542036307')
                     .then(() => {
                         showNotification('Phone number copied to clipboard!');
                     })
@@ -382,9 +377,24 @@ function setupClipboardCopy() {
             });
         }
         
-        console.log('Clipboard copy functionality setup');
+        // Setup copy buttons in contact card
+        const copyButtons = document.querySelectorAll('.copy-btn');
+        copyButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const value = this.getAttribute('data-value');
+                navigator.clipboard.writeText(value)
+                    .then(() => {
+                        showNotification('Copied to clipboard!');
+                    })
+                    .catch(err => {
+                        console.error('Failed to copy:', err);
+                    });
+            });
+        });
+        
+        console.log('Copy buttons setup complete');
     } catch (error) {
-        console.error('Error setting up clipboard copy:', error);
+        console.error('Error setting up copy buttons:', error);
     }
 }
 
@@ -460,6 +470,40 @@ function setupSmoothScrolling() {
         console.log('Smooth scrolling setup complete');
     } catch (error) {
         console.error('Error setting up smooth scrolling:', error);
+    }
+}
+
+// Setup scroll spy to highlight active nav items
+function setupScrollSpy() {
+    try {
+        const sections = document.querySelectorAll('section[id]');
+        const navLinks = document.querySelectorAll('.nav-link');
+        
+        function highlightNavItem() {
+            const scrollPosition = window.scrollY;
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop - 100;
+                const sectionHeight = section.offsetHeight;
+                const sectionId = section.getAttribute('id');
+                
+                if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
+                    navLinks.forEach(link => {
+                        link.classList.remove('active');
+                        if (link.getAttribute('href') === '#' + sectionId) {
+                            link.classList.add('active');
+                        }
+                    });
+                }
+            });
+        }
+        
+        window.addEventListener('scroll', highlightNavItem);
+        highlightNavItem(); // Call once on page load
+        
+        console.log('Scroll spy setup complete');
+    } catch (error) {
+        console.error('Error setting up scroll spy:', error);
     }
 }
 
@@ -643,4 +687,97 @@ function showNotification(message, duration = 3000) {
     } catch (error) {
         console.error('Error showing notification:', error);
     }
+}
+
+// Setup scroll animations for cards and sections
+function setupScrollAnimations() {
+    // Target all elements that should animate on scroll
+    const animateElements = document.querySelectorAll(
+        '.project-card, .timeline-item, .skills-category, .background-card, .section-header'
+    );
+    
+    // Add animate-on-scroll class to all elements
+    animateElements.forEach(element => {
+        element.classList.add('animate-on-scroll');
+    });
+    
+    // Create an intersection observer
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            // If element is in viewport
+            if (entry.isIntersecting) {
+                // Add the animation class
+                entry.target.classList.add('animate-active');
+                // Stop observing after animation is triggered
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { 
+        threshold: 0.15, // Trigger when 15% of the element is visible
+        rootMargin: '0px 0px -50px 0px' // Adjust trigger point
+    });
+    
+    // Start observing all the elements
+    animateElements.forEach(element => {
+        observer.observe(element);
+    });
+    
+    console.log('Scroll animations setup complete');
+}
+// Card Interaction Improvements
+// Add consistent card active state management
+function setupCardActiveStates() {
+    const cards = document.querySelectorAll(
+        '.project-card, .timeline-item, .skills-category, .background-card'
+    );
+    
+    // Helper function to remove active class from all cards
+    function removeAllActiveStates() {
+        cards.forEach(card => {
+            card.classList.remove('card-active');
+        });
+    }
+    
+    // Add click handler to toggle active state
+    cards.forEach(card => {
+        card.addEventListener('click', (e) => {
+            // Don't trigger when clicking on links or buttons inside the card
+            if (e.target.tagName === 'A' || e.target.tagName === 'BUTTON' || 
+                e.target.closest('a') || e.target.closest('button')) {
+                return;
+            }
+            
+            // Toggle active state
+            const isActive = card.classList.contains('card-active');
+            
+            // Remove active state from all cards
+            removeAllActiveStates();
+            
+            // If wasn't active before, make it active
+            if (!isActive) {
+                card.classList.add('card-active');
+            }
+        });
+    });
+    
+    // Clear active states when clicking outside cards
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('.project-card') && 
+            !e.target.closest('.timeline-item') &&
+            !e.target.closest('.skills-category') &&
+            !e.target.closest('.background-card')) {
+            removeAllActiveStates();
+        }
+    });
+    
+    console.log('Card active states setup complete');
+}
+
+// Create background animation
+function setupBackgroundAnimation() {
+    const bgElement = document.createElement('div');
+    bgElement.classList.add('background-animation');
+    document.body.appendChild(bgElement);
+    
+    console.log('Background animation setup complete');
 }
