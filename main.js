@@ -14,19 +14,19 @@ if (typeof portfolioData === 'undefined') {
 }
 
 // Wait for DOM to be fully loaded
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     console.log('DOM fully loaded');
-    
+
     try {
         // Log data to check if it's available
         console.log('Portfolio data available:', portfolioData !== undefined);
         if (portfolioData) {
             console.log('Basic info available:', portfolioData.basics !== undefined);
         }
-        
+
         // Initialize all sections from data
         initPortfolio();
-        
+
         // Setup interactive elements
         setupMobileMenu();
         setupSmoothScrolling();
@@ -34,7 +34,8 @@ document.addEventListener('DOMContentLoaded', function() {
         setupThemeToggle();
         setupCopyButtons();
         setupScrollSpy();
-        
+        setupImageCarousels();
+
         // Set current year in footer
         document.getElementById('current-year').textContent = new Date().getFullYear();
         setTimeout(() => {
@@ -42,7 +43,7 @@ document.addEventListener('DOMContentLoaded', function() {
             setupCardActiveStates();
             setupBackgroundAnimation();
         }, 100);
-        
+
         console.log('Portfolio initialization complete');
     } catch (error) {
         console.error('Error initializing portfolio:', error);
@@ -65,24 +66,24 @@ function initPortfolio() {
         document.querySelector('.gradient-text').textContent = portfolioData.basics.tagline;
         document.querySelector('.intro-description').textContent = portfolioData.basics.description;
         document.querySelector('.github-link').href = portfolioData.basics.github;
-        
+
         console.log('Basic info loaded');
-        
+
         // Load Experience section
         loadExperience();
-        
+
         // Load Projects section
         loadProjects();
-        
+
         // Load Skills section
         loadSkills();
-        
+
         // Load Background section
         loadBackground();
-        
+
         // We're not dynamically loading the contact section anymore
         // It's directly in the HTML for better styling control
-        
+
         console.log('All sections loaded');
     } catch (error) {
         console.error('Error in initPortfolio:', error);
@@ -98,18 +99,18 @@ function loadExperience() {
             console.error('Experience timeline container not found');
             return;
         }
-        
+
         timelineContainer.innerHTML = '';
-        
+
         if (!portfolioData.experience || !Array.isArray(portfolioData.experience)) {
             console.error('Experience data is missing or not an array');
             return;
         }
-        
+
         portfolioData.experience.forEach((job, index) => {
             const experienceEl = document.createElement('div');
             experienceEl.className = 'timeline-item';
-            
+
             let jobItemsHTML = '';
             job.items.forEach(item => {
                 jobItemsHTML += `
@@ -120,12 +121,12 @@ function loadExperience() {
                     </div>
                 `;
             });
-            
+
             let techTagsHTML = '';
             job.technologies.forEach(tech => {
                 techTagsHTML += `<span>${tech}</span>`;
             });
-            
+
             experienceEl.innerHTML = `
                 <div class="timeline-date">
                     <span>${job.date}</span>
@@ -144,10 +145,10 @@ function loadExperience() {
                     </div>
                 </div>
             `;
-            
+
             timelineContainer.appendChild(experienceEl);
         });
-        
+
         console.log('Experience section loaded');
     } catch (error) {
         console.error('Error loading experience section:', error);
@@ -155,6 +156,7 @@ function loadExperience() {
 }
 
 // Load Projects section
+// In loadProjects() function
 function loadProjects() {
     try {
         const projectsContainer = document.getElementById('projects-grid');
@@ -162,14 +164,14 @@ function loadProjects() {
             console.error('Projects grid container not found');
             return;
         }
-        
+
         projectsContainer.innerHTML = '';
-        
+
         if (!portfolioData.projects || !Array.isArray(portfolioData.projects)) {
             console.error('Projects data is missing or not an array');
             return;
         }
-        
+
         portfolioData.projects.forEach(project => {
             let bulletPoints = '';
             if (project.bullets && Array.isArray(project.bullets)) {
@@ -177,17 +179,41 @@ function loadProjects() {
                     bulletPoints += `<p>• ${bullet}</p>`;
                 });
             }
-            
+
             let techTagsHTML = '';
             if (project.technologies && Array.isArray(project.technologies)) {
                 project.technologies.forEach(tech => {
                     techTagsHTML += `<span>${tech}</span>`;
                 });
             }
-            
+
+            // New: Handle project images carousel
+            let imagesHTML = '';
+            if (project.images && project.images.length) {
+                imagesHTML = `
+                <div class="project-image-carousel">
+                    <div class="carousel-container">
+                        ${project.images.map((img, i) =>
+                    `<div class="carousel-slide${i === 0 ? ' active' : ''}">
+                                <img src="${img}" alt="${project.title} screenshot ${i + 1}">
+                            </div>`
+                ).join('')}
+                    </div>
+                    ${project.images.length > 1 ? `
+                    <button class="carousel-prev" aria-label="Previous image"><i class="fas fa-chevron-left"></i></button>
+                    <button class="carousel-next" aria-label="Next image"><i class="fas fa-chevron-right"></i></button>
+                    <div class="carousel-dots">
+                        ${project.images.map((_, i) =>
+                    `<button class="carousel-dot${i === 0 ? ' active' : ''}" data-slide="${i}" aria-label="Go to image ${i + 1}"></button>`
+                ).join('')}
+                    </div>` : ''}
+                </div>`;
+            }
+
             const projectEl = document.createElement('article');
             projectEl.className = 'project-card';
             projectEl.innerHTML = `
+                ${imagesHTML}
                 <div class="project-content">
                     <div class="project-header">
                         <div class="project-title">
@@ -216,19 +242,21 @@ function loadProjects() {
                     </div>
                 </div>
             `;
-            
+
             projectsContainer.appendChild(projectEl);
         });
-        
+
         console.log('Projects section loaded');
-        
+
+        // Setup carousel functionality after projects are loaded
+        setupImageCarousels();
+
         // Setup README buttons after projects are loaded
         setupReadmeButtons();
     } catch (error) {
         console.error('Error loading projects section:', error);
     }
 }
-
 // Load Skills section
 function loadSkills() {
     try {
@@ -237,17 +265,17 @@ function loadSkills() {
             console.error('Skills container not found');
             return;
         }
-        
+
         skillsContainer.innerHTML = '';
-        
+
         if (!portfolioData.skills || !Array.isArray(portfolioData.skills)) {
             console.error('Skills data is missing or not an array');
             return;
         }
-        
+
         portfolioData.skills.forEach(category => {
             let skillItemsHTML = '';
-            
+
             if (category.items && Array.isArray(category.items)) {
                 category.items.forEach(skill => {
                     // Convert level number to filled circles (1-3 scale)
@@ -259,7 +287,7 @@ function loadSkills() {
                             levelHTML += '<i class="far fa-circle"></i>';
                         }
                     }
-                    
+
                     skillItemsHTML += `
                         <div class="skill-item">
                             <div class="skill-info">
@@ -272,7 +300,7 @@ function loadSkills() {
                     `;
                 });
             }
-            
+
             const categoryEl = document.createElement('div');
             categoryEl.className = 'skills-category';
             categoryEl.innerHTML = `
@@ -281,10 +309,10 @@ function loadSkills() {
                     ${skillItemsHTML}
                 </div>
             `;
-            
+
             skillsContainer.appendChild(categoryEl);
         });
-        
+
         console.log('Skills section loaded');
     } catch (error) {
         console.error('Error loading skills section:', error);
@@ -299,17 +327,17 @@ function loadBackground() {
             console.error('Background container not found');
             return;
         }
-        
+
         backgroundContainer.innerHTML = '';
-        
+
         if (!portfolioData.background || !Array.isArray(portfolioData.background)) {
             console.error('Background data is missing or not an array');
             return;
         }
-        
+
         portfolioData.background.forEach(section => {
             let itemsHTML = '';
-            
+
             if (section.items && Array.isArray(section.items)) {
                 section.items.forEach(item => {
                     itemsHTML += `
@@ -322,7 +350,7 @@ function loadBackground() {
                     `;
                 });
             }
-            
+
             const sectionEl = document.createElement('div');
             sectionEl.className = 'background-card';
             sectionEl.innerHTML = `
@@ -334,10 +362,10 @@ function loadBackground() {
                     ${itemsHTML}
                 </div>
             `;
-            
+
             backgroundContainer.appendChild(sectionEl);
         });
-        
+
         console.log('Background section loaded');
     } catch (error) {
         console.error('Error loading background section:', error);
@@ -350,7 +378,7 @@ function setupCopyButtons() {
         // Setup email contact copying
         const emailContact = document.getElementById('email-contact');
         if (emailContact) {
-            emailContact.addEventListener('click', function(e) {
+            emailContact.addEventListener('click', function (e) {
                 e.preventDefault();
                 navigator.clipboard.writeText('gk24feb@gmail.com')
                     .then(() => {
@@ -361,11 +389,11 @@ function setupCopyButtons() {
                     });
             });
         }
-        
+
         // Setup phone contact copying
         const phoneContact = document.getElementById('phone-contact');
         if (phoneContact) {
-            phoneContact.addEventListener('click', function(e) {
+            phoneContact.addEventListener('click', function (e) {
                 e.preventDefault();
                 navigator.clipboard.writeText('+91 7542036307')
                     .then(() => {
@@ -376,11 +404,11 @@ function setupCopyButtons() {
                     });
             });
         }
-        
+
         // Setup copy buttons in contact card
         const copyButtons = document.querySelectorAll('.copy-btn');
         copyButtons.forEach(button => {
-            button.addEventListener('click', function() {
+            button.addEventListener('click', function () {
                 const value = this.getAttribute('data-value');
                 navigator.clipboard.writeText(value)
                     .then(() => {
@@ -391,7 +419,7 @@ function setupCopyButtons() {
                     });
             });
         });
-        
+
         console.log('Copy buttons setup complete');
     } catch (error) {
         console.error('Error setting up copy buttons:', error);
@@ -404,43 +432,43 @@ function setupMobileMenu() {
         const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
         const nav = document.querySelector('.nav');
         const navLinks = document.querySelectorAll('.nav-link');
-        
+
         if (!mobileMenuBtn || !nav) {
             console.error('Mobile menu elements not found');
             return;
         }
-        
+
         // Toggle menu function
         function toggleMenu() {
             nav.classList.toggle('active');
         }
-        
+
         // Close menu function
         function closeMenu() {
             nav.classList.remove('active');
         }
-        
+
         // Mobile menu button click
-        mobileMenuBtn.addEventListener('click', function(e) {
+        mobileMenuBtn.addEventListener('click', function (e) {
             e.stopPropagation();
             toggleMenu();
         });
-        
+
         // Close menu when clicking nav links
         navLinks.forEach(link => {
             link.addEventListener('click', closeMenu);
         });
-        
+
         // Close menu when clicking outside
-        document.addEventListener('click', function(e) {
+        document.addEventListener('click', function (e) {
             if (!nav.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
                 closeMenu();
             }
         });
-        
+
         // Close menu on scroll
         window.addEventListener('scroll', closeMenu);
-        
+
         console.log('Mobile menu setup complete');
     } catch (error) {
         console.error('Error setting up mobile menu:', error);
@@ -451,13 +479,13 @@ function setupMobileMenu() {
 function setupSmoothScrolling() {
     try {
         const navLinks = document.querySelectorAll('.nav-link');
-        
+
         navLinks.forEach(link => {
-            link.addEventListener('click', function(e) {
+            link.addEventListener('click', function (e) {
                 e.preventDefault();
                 const targetId = this.getAttribute('href');
                 const targetElement = document.querySelector(targetId);
-                
+
                 if (targetElement) {
                     targetElement.scrollIntoView({
                         behavior: 'smooth',
@@ -466,7 +494,7 @@ function setupSmoothScrolling() {
                 }
             });
         });
-        
+
         console.log('Smooth scrolling setup complete');
     } catch (error) {
         console.error('Error setting up smooth scrolling:', error);
@@ -478,15 +506,15 @@ function setupScrollSpy() {
     try {
         const sections = document.querySelectorAll('section[id]');
         const navLinks = document.querySelectorAll('.nav-link');
-        
+
         function highlightNavItem() {
             const scrollPosition = window.scrollY;
-            
+
             sections.forEach(section => {
                 const sectionTop = section.offsetTop - 100;
                 const sectionHeight = section.offsetHeight;
                 const sectionId = section.getAttribute('id');
-                
+
                 if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
                     navLinks.forEach(link => {
                         link.classList.remove('active');
@@ -497,10 +525,10 @@ function setupScrollSpy() {
                 }
             });
         }
-        
+
         window.addEventListener('scroll', highlightNavItem);
         highlightNavItem(); // Call once on page load
-        
+
         console.log('Scroll spy setup complete');
     } catch (error) {
         console.error('Error setting up scroll spy:', error);
@@ -512,34 +540,34 @@ function setupModals() {
     try {
         const modal = document.getElementById('project-modal');
         const modalClose = modal.querySelector('.modal-close');
-        
+
         if (!modal || !modalClose) {
             console.error('Modal elements not found');
             return;
         }
-        
+
         // Close modal when clicking the close button
-        modalClose.addEventListener('click', function() {
+        modalClose.addEventListener('click', function () {
             modal.classList.remove('active');
             document.body.style.overflow = '';
         });
-        
+
         // Close modal when clicking outside the content
-        modal.addEventListener('click', function(e) {
+        modal.addEventListener('click', function (e) {
             if (e.target === modal) {
                 modal.classList.remove('active');
                 document.body.style.overflow = '';
             }
         });
-        
+
         // Close modal on escape key
-        document.addEventListener('keydown', function(e) {
+        document.addEventListener('keydown', function (e) {
             if (e.key === 'Escape' && modal.classList.contains('active')) {
                 modal.classList.remove('active');
                 document.body.style.overflow = '';
             }
         });
-        
+
         console.log('Modal setup complete');
     } catch (error) {
         console.error('Error setting up modals:', error);
@@ -550,49 +578,49 @@ function setupModals() {
 function setupReadmeButtons() {
     try {
         const readmeBtns = document.querySelectorAll('.readme-btn');
-        
+
         if (!readmeBtns.length) {
             console.log('No README buttons found');
             return;
         }
-        
+
         readmeBtns.forEach(btn => {
-            btn.addEventListener('click', async function(e) {
+            btn.addEventListener('click', async function (e) {
                 const repo = e.currentTarget.dataset.repo;
                 const modal = document.getElementById('project-modal');
                 const modalTitle = document.getElementById('modal-title');
                 const modalContent = document.getElementById('modal-content');
-                
+
                 if (!modalTitle || !modalContent) {
                     console.error('Modal elements not found');
                     return;
                 }
-                
+
                 modalTitle.textContent = 'Loading README...';
                 modalContent.innerHTML = '<p>Loading content...</p>';
-                
+
                 modal.classList.add('active');
                 document.body.style.overflow = 'hidden';
-                
+
                 try {
                     // Log the GitHub API URL we're trying to access
                     const apiUrl = `https://api.github.com/repos/${repo}/readme`;
                     console.log('Fetching README from:', apiUrl);
-                    
+
                     // Fetch README from GitHub
                     const response = await fetch(apiUrl);
                     if (!response.ok) {
                         throw new Error(`Could not fetch README (Status: ${response.status})`);
                     }
-                    
+
                     const data = await response.json();
-                    
+
                     // Base64 decode
                     const content = atob(data.content);
-                    
+
                     // Set modal content
                     modalTitle.textContent = repo.split('/')[1];
-                    
+
                     // If you have a markdown parser like marked.js
                     if (window.marked) {
                         modalContent.innerHTML = marked.parse(content);
@@ -608,7 +636,7 @@ function setupReadmeButtons() {
                 }
             });
         });
-        
+
         console.log('README buttons setup complete');
     } catch (error) {
         console.error('Error setting up README buttons:', error);
@@ -620,30 +648,30 @@ function setupThemeToggle() {
     try {
         const themeBtn = document.getElementById('theme-toggle');
         const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
-        
+
         if (!themeBtn) {
             console.error('Theme toggle button not found');
             return;
         }
-        
+
         // Check for saved theme preference or use the system preference
-        const currentTheme = localStorage.getItem('theme') || 
-                             (prefersDarkScheme.matches ? 'dark' : 'light');
-        
+        const currentTheme = localStorage.getItem('theme') ||
+            (prefersDarkScheme.matches ? 'dark' : 'light');
+
         // Set initial theme
         document.body.classList.toggle('light-theme', currentTheme === 'light');
         updateThemeIcon(currentTheme);
-        
+
         // Toggle theme on button click
-        themeBtn.addEventListener('click', function() {
+        themeBtn.addEventListener('click', function () {
             const isCurrentlyLight = document.body.classList.contains('light-theme');
             const newTheme = isCurrentlyLight ? 'dark' : 'light';
-            
+
             document.body.classList.toggle('light-theme', newTheme === 'light');
             localStorage.setItem('theme', newTheme);
             updateThemeIcon(newTheme);
         });
-        
+
         // Update the theme button icon
         function updateThemeIcon(theme) {
             const icon = themeBtn.querySelector('i');
@@ -651,7 +679,7 @@ function setupThemeToggle() {
                 icon.className = theme === 'light' ? 'fas fa-moon' : 'fas fa-sun';
             }
         }
-        
+
         console.log('Theme toggle setup complete');
     } catch (error) {
         console.error('Error setting up theme toggle:', error);
@@ -666,15 +694,15 @@ function showNotification(message, duration = 3000) {
         if (existingNotification) {
             existingNotification.remove();
         }
-        
+
         // Create new notification
         const notification = document.createElement('div');
         notification.className = 'notification';
         notification.textContent = message;
-        
+
         // Add to body
         document.body.appendChild(notification);
-        
+
         // Remove after duration
         setTimeout(() => {
             notification.classList.add('fade-out');
@@ -682,7 +710,7 @@ function showNotification(message, duration = 3000) {
                 notification.remove();
             }, 300);
         }, duration);
-        
+
         console.log('Notification shown:', message);
     } catch (error) {
         console.error('Error showing notification:', error);
@@ -695,12 +723,12 @@ function setupScrollAnimations() {
     const animateElements = document.querySelectorAll(
         '.project-card, .timeline-item, .skills-category, .background-card, .section-header'
     );
-    
+
     // Add animate-on-scroll class to all elements
     animateElements.forEach(element => {
         element.classList.add('animate-on-scroll');
     });
-    
+
     // Create an intersection observer
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
@@ -712,16 +740,16 @@ function setupScrollAnimations() {
                 observer.unobserve(entry.target);
             }
         });
-    }, { 
+    }, {
         threshold: 0.15, // Trigger when 15% of the element is visible
         rootMargin: '0px 0px -50px 0px' // Adjust trigger point
     });
-    
+
     // Start observing all the elements
     animateElements.forEach(element => {
         observer.observe(element);
     });
-    
+
     console.log('Scroll animations setup complete');
 }
 // Card Interaction Improvements
@@ -730,46 +758,46 @@ function setupCardActiveStates() {
     const cards = document.querySelectorAll(
         '.project-card, .timeline-item, .skills-category, .background-card'
     );
-    
+
     // Helper function to remove active class from all cards
     function removeAllActiveStates() {
         cards.forEach(card => {
             card.classList.remove('card-active');
         });
     }
-    
+
     // Add click handler to toggle active state
     cards.forEach(card => {
         card.addEventListener('click', (e) => {
             // Don't trigger when clicking on links or buttons inside the card
-            if (e.target.tagName === 'A' || e.target.tagName === 'BUTTON' || 
+            if (e.target.tagName === 'A' || e.target.tagName === 'BUTTON' ||
                 e.target.closest('a') || e.target.closest('button')) {
                 return;
             }
-            
+
             // Toggle active state
             const isActive = card.classList.contains('card-active');
-            
+
             // Remove active state from all cards
             removeAllActiveStates();
-            
+
             // If wasn't active before, make it active
             if (!isActive) {
                 card.classList.add('card-active');
             }
         });
     });
-    
+
     // Clear active states when clicking outside cards
     document.addEventListener('click', (e) => {
-        if (!e.target.closest('.project-card') && 
+        if (!e.target.closest('.project-card') &&
             !e.target.closest('.timeline-item') &&
             !e.target.closest('.skills-category') &&
             !e.target.closest('.background-card')) {
             removeAllActiveStates();
         }
     });
-    
+
     console.log('Card active states setup complete');
 }
 
@@ -778,6 +806,68 @@ function setupBackgroundAnimation() {
     const bgElement = document.createElement('div');
     bgElement.classList.add('background-animation');
     document.body.appendChild(bgElement);
-    
+
     console.log('Background animation setup complete');
 }
+// Add this function to main.js
+function setupImageCarousels() {
+    try {
+        const carousels = document.querySelectorAll('.project-image-carousel');
+
+        carousels.forEach(carousel => {
+            const slides = carousel.querySelectorAll('.carousel-slide');
+            const dots = carousel.querySelectorAll('.carousel-dot');
+            const nextBtn = carousel.querySelector('.carousel-next');
+            const prevBtn = carousel.querySelector('.carousel-prev');
+
+            if (slides.length <= 1) return; // Skip if only one image
+
+            let currentSlide = 0;
+
+            function showSlide(index) {
+                slides.forEach(slide => slide.classList.remove('active'));
+                dots.forEach(dot => dot.classList.remove('active'));
+
+                slides[index].classList.add('active');
+                dots[index].classList.add('active');
+                currentSlide = index;
+            }
+
+            // Event listeners
+            if (nextBtn) {
+                nextBtn.addEventListener('click', () => {
+                    showSlide((currentSlide + 1) % slides.length);
+                });
+            }
+
+            if (prevBtn) {
+                prevBtn.addEventListener('click', () => {
+                    showSlide((currentSlide - 1 + slides.length) % slides.length);
+                });
+            }
+
+            dots.forEach((dot, i) => {
+                dot.addEventListener('click', () => showSlide(i));
+            });
+
+            // Auto-advance (optional)
+            let interval = setInterval(() => {
+                showSlide((currentSlide + 1) % slides.length);
+            }, 5000);
+
+            // Pause on hover
+            carousel.addEventListener('mouseenter', () => clearInterval(interval));
+            carousel.addEventListener('mouseleave', () => {
+                interval = setInterval(() => {
+                    showSlide((currentSlide + 1) % slides.length);
+                }, 5000);
+            });
+        });
+
+        console.log('Image carousels setup complete');
+    } catch (error) {
+        console.error('Error setting up image carousels:', error);
+    }
+}
+
+// Make sure to call this function in initPortfolio() or add it to the DOMContentLoaded event handler
