@@ -15,7 +15,7 @@ const portfolioData = {
         phone: "+91 7542036307",
         location: "Bangalore, Karnataka, India - 560066"
     },
-    
+
     // Experience section
     experience: [
         {
@@ -64,7 +64,7 @@ const portfolioData = {
             technologies: ["Flutter", "BLoC", "REST APIs", "Dart"]
         }
     ],
-    
+
     // Projects section
     projects: [
         {
@@ -80,6 +80,30 @@ const portfolioData = {
             live: "",
             readme: "kumar-gautam24/disaster-management",
             technologies: ["Flutter", "Firebase", "Geolocation APIs", "Ad-hoc Networking"]
+        },
+        {
+            title: "Food Subscription Platform",
+            period: "2024", // Update this with the correct year
+            description: "A comprehensive food subscription platform built with Flutter and clean architecture principles, allowing users to subscribe to meal plans, customize their meal slots, and manage deliveries.",
+            bullets: [
+                "Designed and implemented a complete food delivery application with features from authentication to payment processing",
+                "Architected using Clean Architecture with domain-driven design for separation of concerns and maintainability",
+                "Implemented BLoC/Cubit pattern for state management ensuring unidirectional data flow",
+                "Integrated Razorpay for payments and Google Maps for location services with address management"
+            ],
+            images: [
+                "images/project-food-subscription/images/project-food-subscription/Screenshot-2025-05-10-121254.png",
+                "images/project-food-subscription/Screenshot-2025-05-10-121141.jpg",
+                "images/project-food-subscription/Screenshot-2025-05-10-121143.jpg",
+                "images/project-food-subscription/Screenshot-2025-05-10-121152.jpg",
+                "images/project-food-subscription/Screenshot-2025-05-10-121156.jpg",
+                "images/project-food-subscription/Screenshot-2025-05-10-121200.jpg"
+                // Add more if needed, but 4-6 is usually a good number for a carousel
+            ],
+            github: "https://github.com/kumar-gautam24/food-subscription-app", // Update with correct link todo:
+            live: "", // Add if available
+            readme: "kumar-gautam24/food-subscription-app", // Update with correct repository
+            technologies: ["Flutter", "Clean Architecture", "BLoC/Cubit", "Dio", "Razorpay", "Google Maps", "Get_It"]
         },
         {
             title: "Tic Tac Toe Game with AI",
@@ -124,7 +148,7 @@ const portfolioData = {
             technologies: ["Python", "Tesseract OCR", "PyTorch", "Computer Vision"]
         }
     ],
-    
+
     // Skills section
     skills: [
         {
@@ -170,7 +194,7 @@ const portfolioData = {
             ]
         }
     ],
-    
+
     // Background section
     background: [
         {
@@ -216,7 +240,7 @@ const portfolioData = {
             ]
         }
     ],
-    
+
     // Contact section
     contact: [
         {
