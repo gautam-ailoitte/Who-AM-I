@@ -6,7 +6,7 @@
     <title>Gautam Kumar | Flutter Developer</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@700&display=swap" rel="stylesheet">
 </head>
@@ -14,14 +14,14 @@
     <header class="header">
         <div class="container">
             <!-- Logo -->
-            <div class="logo">
+            <a href="#" class="logo">
                 <span class="logo-text">Gautam</span>
                 <span class="logo-dot">.</span>
                 <span class="logo-text">Kumar</span>
-            </div>
+            </a>
             
             <!-- Mobile menu button -->
-            <button class="mobile-menu-btn">
+            <button class="mobile-menu-btn" aria-label="Toggle menu">
                 <i class="fas fa-bars"></i>
             </button>
             
@@ -39,7 +39,7 @@
             
             <!-- Theme switcher -->
             <div class="controls">
-                <button class="theme-btn" id="theme-toggle">
+                <button class="theme-btn" id="theme-toggle" aria-label="Toggle theme">
                     <i class="fas fa-moon"></i>
                 </button>
             </div>
@@ -138,45 +138,84 @@
                     <span class="section-subtitle">CONTACT</span>
                     <h2 class="section-title">Get In Touch</h2>
                 </div>
+                
                 <div class="contact-content">
                     <p class="contact-description">Feel free to reach out for opportunities or collaborations!</p>
                     
-                    <div class="contact-links">
-                        <a href="mailto:gk24feb@gmail.com" class="contact-method" id="email-contact">
-                            <i class="fas fa-envelope"></i>
-                            <div class="contact-method-content">
-                                <span class="contact-method-label">Email</span>
-                                <span class="contact-method-value">gk24feb@gmail.com</span>
-                            </div>
-                        </a>
+                    <div class="contact-layout">
+                        <!-- Left side: Contact methods -->
+                        <div class="contact-methods">
+                            <a href="mailto:gk24feb@gmail.com" class="contact-method" id="email-contact">
+                                <div class="contact-icon">
+                                    <i class="fas fa-envelope"></i>
+                                </div>
+                                <div class="contact-method-content">
+                                    <span class="contact-method-label">Email</span>
+                                    <span class="contact-method-value">gk24feb@gmail.com</span>
+                                </div>
+                            </a>
+                            
+                            <a href="tel:+917542036307" class="contact-method" id="phone-contact">
+                                <div class="contact-icon">
+                                    <i class="fas fa-phone-alt"></i>
+                                </div>
+                                <div class="contact-method-content">
+                                    <span class="contact-method-label">Phone</span>
+                                    <span class="contact-method-value">+91 7542036307</span>
+                                </div>
+                            </a>
+                            
+                            <a href="https://linkedin.com/in/gautam-kumar-24feb" class="contact-method" target="_blank">
+                                <div class="contact-icon">
+                                    <i class="fab fa-linkedin-in"></i>
+                                </div>
+                                <div class="contact-method-content">
+                                    <span class="contact-method-label">LinkedIn</span>
+                                    <span class="contact-method-value">gautam-kumar-24feb</span>
+                                </div>
+                            </a>
+                            
+                            <a href="https://github.com/kumar-gautam24" class="contact-method" target="_blank">
+                                <div class="contact-icon">
+                                    <i class="fab fa-github"></i>
+                                </div>
+                                <div class="contact-method-content">
+                                    <span class="contact-method-label">GitHub</span>
+                                    <span class="contact-method-value">kumar-gautam24</span>
+                                </div>
+                            </a>
+                        </div>
                         
-                        <a href="tel:+917542036307" class="contact-method" id="phone-contact">
-                            <i class="fas fa-phone-alt"></i>
-                            <div class="contact-method-content">
-                                <span class="contact-method-label">Phone</span>
-                                <span class="contact-method-value">+91 7542036307</span>
+                        <!-- Right side: Quick copy info and alternative text -->
+                        <div class="contact-info">
+                            <div class="contact-card">
+                                <h3>Connect Quickly</h3>
+                                <p class="contact-card-description">Preferred method of communication? You can click on the contact links to either navigate or copy the information to your clipboard.</p>
+                                
+                                <div class="quick-copy">
+                                    <div class="copy-item" id="copy-email">
+                                        <div class="copy-item-label">Email</div>
+                                        <div class="copy-item-value">gk24feb@gmail.com</div>
+                                        <button class="copy-btn" data-value="gk24feb@gmail.com">
+                                            <i class="fas fa-copy"></i>
+                                        </button>
+                                    </div>
+                                    
+                                    <div class="copy-item" id="copy-phone">
+                                        <div class="copy-item-label">Phone</div>
+                                        <div class="copy-item-value">+91 7542036307</div>
+                                        <button class="copy-btn" data-value="+91 7542036307">
+                                            <i class="fas fa-copy"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <div class="contact-availability">
+                                    <i class="fas fa-clock"></i>
+                                    <p>Available for freelance work, full-time positions, and collaborative projects</p>
+                                </div>
                             </div>
-                        </a>
-                        
-                        <a href="https://linkedin.com/in/gautam-kumar-24feb" class="contact-method" target="_blank">
-                            <i class="fab fa-linkedin-in"></i>
-                            <div class="contact-method-content">
-                                <span class="contact-method-label">LinkedIn</span>
-                                <span class="contact-method-value">gautam-kumar-24feb</span>
-                            </div>
-                        </a>
-                        
-                        <a href="https://github.com/kumar-gautam24" class="contact-method" target="_blank">
-                            <i class="fab fa-github"></i>
-                            <div class="contact-method-content">
-                                <span class="contact-method-label">GitHub</span>
-                                <span class="contact-method-value">kumar-gautam24</span>
-                            </div>
-                        </a>
-                    </div>
-                    
-                    <div class="contact-alternative">
-                        <p class="contact-note">Prefer to connect quickly? Click on the <strong>email</strong> or <strong>phone</strong> to copy directly to your clipboard.</p>
+                        </div>
                     </div>
                 </div>
             </div>
